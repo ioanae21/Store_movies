@@ -9,7 +9,13 @@ db = SQLAlchemy(app)
 
 
 class Movies(db.Model):
-    '''Creating a template of the movies table.'''
+    __tablename__ = 'movies'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    movie_title = db.Column(db.String(40), nullable=False)
+    director = db.Column(db.String(30), nullable=False)
+    rating = db.Column(db.Float, nullable=False)
+    release_date = db.Column(db.String, nullable=False)
 
 
     def __str__(self):
@@ -57,10 +63,14 @@ def logout():
 @app.route('/books', methods=['GET', 'POST'])
 def books():
     if request.method=='POST':
-        b1 = Movies(title = 'blank', director = 'blank', release_date = 'blank', rating = 'blank')
-        db.session.add(b1)
+        title = request.form['title']
+        director = request.form['director']
+        releasedate = request.form['releasedate']
+        rating = request.form['rating']
+        movie1 = Movies(movie_title = title, director = director, release_date = releasedate, rating = rating)
+        db.session.add(movie1)
         db.session.commit()
-        return ''
+        return 'movie successfully added.'
 
     return render_template('books.html')
 
@@ -70,3 +80,5 @@ def register():
 
 if __name__ == "__main__":
     app.run(debug=True)
+  
+
