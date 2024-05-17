@@ -22,7 +22,16 @@ class Movies(db.Model):
         return f'Title of the movie:{self.title}; The director: {self.director}; The release date: {self.release_date}; The rating: {self.rating}'
 
 
+class Accounts(db.Model):
+    _tablename_ = 'accounts'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String, nullable=False, unique=True)
+    password = db.Column(db.String, nullable=False)
+    creation_date = db.Column(db.String, nullable=False, default=str(datetime.utcnow()))
 
+    def __str__(self):
+        return f'Username: {self.username}; Password: {self.password}; Creation date: {self.creation_date}'333
 
 # Calls db.create_all() in order to initialize all of the tables we created.
 with app.app_context():
@@ -74,8 +83,17 @@ def books():
 
     return render_template('books.html')
 
-@app.route('/register', methods = ['GET', 'POST'])
+@app.route('/register', methods=['POST', 'GET'])
 def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if Accounts.query.filter_by(username=username).first():
+            return 'Username already exists'
+        new_user = Accounts(username=username, password=password, creation_date=str(datetime.utcnow()))
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect(url_for('login'))
     return render_template('register.html')
 
 if __name__ == "__main__":
