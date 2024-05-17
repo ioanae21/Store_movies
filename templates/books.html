@@ -1,0 +1,16 @@
+{%  extends 'base.html' %}
+ {% block title %} Home page {%  endblock %}
+
+{% block content %}
+<br>
+<h3>Add a movie: </h3>
+    <form method="post" style="width:50%; margin-left: 10px">
+      <div class="form-group">
+        <input type="text" name="title" class="form-control" placeholder="Movie Title"><br>
+        <input type="text" name="director" class="form-control" placeholder="Movie Director"><br>
+        <input type="text" name="releasedate" class="form-control" placeholder="Release date of the movie"><br>
+        <input type="text" name="rating" class="form-control"  placeholder="Rating of the movie"><br>
+      </div>
+    <button type="submit" class="btn btn-primary">Add Book</button>
+    </form>
+{% endblock %}

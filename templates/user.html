@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Hello {{session['user']}}</h2>
+
+    {% for i in subjects %}
+        <p>საგანი: {{ i }}</p>
+        {% if i=='Python' %}
+            <p>გამოცდა: 1 ივლისი</p>
+        {% elif i=='Calculus'%}
+            <p>გამოცდა: 5 ივლისი</p>
+        {% else %}
+            <p>გამოცდა: 13 ივლისი</p>
+        {% endif %}
+    {% endfor %}
+
+<a href="{{url_for('home')}}"> მთავარი გვერდი </a>
+{% endblock %}
+
+
