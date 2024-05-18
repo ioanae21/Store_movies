@@ -1,0 +1,35 @@
+body{
+    background-image: url(blue-pattern.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+
+.container{
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+
+}
+
+.navbar-nav {
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+
+}
+
+.nav-link{
+    color:white !important;
+    font-weight: 900 !important;
+}
+
+form{
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
