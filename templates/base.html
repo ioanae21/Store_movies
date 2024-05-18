@@ -16,12 +16,14 @@
           <div class="navbar-nav">
             <a class="nav-link" aria-current="page" href="/">Home</a>
             <a class="nav-link" href="{{url_for('login')}}">Login</a>
-            <a class="nav-link" href="{{url_for('user')}}">My pages</a>
+            <a class="nav-link" href="{{url_for('register')}}">register</a>
               {% if 'user' in session %}
+              <a class="nav-link" href="{{url_for('user')}}">My pages</a>
+              <a class="nav-link" href="{{url_for('movies')}}">movies</a>
               <a class="nav-link" href="/logout">Logout</a>
                 {% endif %}
 
-            <a class="nav-link" href="{{url_for('books')}}">Books</a>
+            <a class="nav-link" href="{{url_for('movies')}}">movies</a>
 
           </div>
         </div>
