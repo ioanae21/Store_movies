@@ -1,5 +1,6 @@
 from flask import Flask, redirect, url_for, render_template, request, session
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy 
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'register'
@@ -10,7 +11,7 @@ db = SQLAlchemy(app)
 
 class Movies(db.Model):
     __tablename__ = 'movies'
-    
+    account_name=db.column(db.string,nullable=false)
     id = db.Column(db.Integer, primary_key=True)
     movie_title = db.Column(db.String(40), nullable=False)
     director = db.Column(db.String(30), nullable=False)
@@ -28,10 +29,10 @@ class Accounts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
-    creation_date = db.Column(db.String, nullable=False, default=str(datetime.utcnow()))
+    creation_date = db.Column(db.String, nullable=False, default=str(datetime.now()))
 
     def __str__(self):
-        return f'Username: {self.username}; Password: {self.password}; Creation date: {self.creation_date}'333
+        return f'Username: {self.username}; Password: {self.password}; Creation date: {self.creation_date}'
 
 # Calls db.create_all() in order to initialize all of the tables we created.
 with app.app_context():
@@ -55,8 +56,8 @@ def login():
 
 @app.route('/user')
 def user():
-    subjects = ['Python', 'Calculus', 'DB']
-    return render_template('user.html',  subjects=subjects)
+    movies=Movies.query.filter_by(account_name=session['user']).all()
+    return render_template('user.html', movies=movies)
 
 
 @app.route('/<name>/<age>')
@@ -66,17 +67,17 @@ def userage(name, age):
 @app.route('/logout')
 def logout():
     session.pop('user', None)
-    return 'You are logged out.'
+    return redirect(url_for('login'))
 
 
-@app.route('/books', methods=['GET', 'POST'])
-def books():
+@app.route('/movies', methods=['GET', 'POST'])
+def movies():
     if request.method=='POST':
         title = request.form['title']
         director = request.form['director']
         releasedate = request.form['releasedate']
         rating = request.form['rating']
-        movie1 = Movies(movie_title = title, director = director, release_date = releasedate, rating = rating)
+        movie1 = Movies(movie_title = title, director = director, release_date = releasedate, rating = rating, account_name=session['user'])
         db.session.add(movie1)
         db.session.commit()
         return 'movie successfully added.'
@@ -90,7 +91,7 @@ def register():
         password = request.form['password']
         if Accounts.query.filter_by(username=username).first():
             return 'Username already exists'
-        new_user = Accounts(username=username, password=password, creation_date=str(datetime.utcnow()))
+        new_user = Accounts(username=username, password=password, creation_date=str(datetime.cnow()))
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('login'))
