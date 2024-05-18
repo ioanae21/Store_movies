@@ -4,13 +4,13 @@ from datetime import datetime
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'register'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///books.sqlite'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///movies.sqlite'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 class Movies(db.Model):
     __tablename__ = 'movies'
-    account_name=db.column(db.string,nullable=false)
+    account_name=db.Column(db.String,nullable=False)
     id = db.Column(db.Integer, primary_key=True)
     movie_title = db.Column(db.String(40), nullable=False)
     director = db.Column(db.String(30), nullable=False)
@@ -40,11 +40,12 @@ def home():
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
+    '''The URL used for logging in. If the user inputs incorrect credentials, for now, it only returns a blank screen with: "invalid username or password"'''
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        user = Accounts.query.filter_by(username=username).first()
-        if user and check_password_hash(user.password, password):
+        if Accounts.query.filter_by(username=username, password=password).first():
             session['user'] = username
             return redirect(url_for('user'))
         return 'Invalid username or password'
@@ -52,14 +53,10 @@ def login():
 
 @app.route('/user')
 def user():
+    '''This portrays the added movies. So far, this has no CSS but we will add it later.'''
+
     movies=Movies.query.filter_by(account_name=session['user']).all()
     return render_template('user.html', movies=movies)
-
-
-
-@app.route('/<name>/<age>')
-def userage(name, age):
-    return f'Hello {name}, your age is {age}'
 
 @app.route('/logout')
 def logout():
@@ -70,6 +67,8 @@ def logout():
 
 @app.route('/movies', methods=['GET', 'POST'])
 def movies():
+    '''The user can add the movies on this page'''
+
     if request.method=='POST':
         title = request.form['title']
         director = request.form['director']
@@ -80,7 +79,7 @@ def movies():
         db.session.commit()
         return 'Movie successfully added.'
 
-    return render_template('books.html')
+    return render_template('movies.html')
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
@@ -94,21 +93,6 @@ def register():
         db.session.commit()
         return redirect(url_for('login'))
     return render_template('register.html')
-
-def sign_up():
-    username = request.form['username']
-    password = request.form['password']
-    # Check if the username already exists
-    if Accounts.query.filter_by(username=username).first():
-        return 'Username already exists'
-    
-    # Hash the password and create a new user account
-    hashed_password = generate_password_hash(password, method='sha256')
-    new_user = Accounts(username=username, password=hashed_password, creation_date=str(datetime.utcnow()))
-    db.session.add(new_user)
-    db.session.commit()
-    
-    return redirect(url_for('login'))
 
 if __name__ == "__main__":
     app.run(debug=True)

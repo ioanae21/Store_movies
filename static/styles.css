@@ -15,7 +15,7 @@ body{
 }
 
 .navbar-nav {
-    width: 300px;
+    width: 500px;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
@@ -24,7 +24,9 @@ body{
 
 .nav-link{
     color:white !important;
+    font-size: 1.5em;
     font-weight: 900 !important;
+    margin-left: 50px;
 }
 
 form{
@@ -32,4 +34,17 @@ form{
     margin-left: auto;
     margin-right: auto;
     text-align: left;
+}
+
+.movie {
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+.movie-instance {
+    font-size: 1.5em;
+    font-weight: 900;
+    outline: auto;
 }
