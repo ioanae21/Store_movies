@@ -10,7 +10,7 @@ db = SQLAlchemy(app)
 
 class Movies(db.Model):
     __tablename__ = 'movies'
-    
+    account_name=db.column(db.string,nullable=false)
     id = db.Column(db.Integer, primary_key=True)
     movie_title = db.Column(db.String(40), nullable=False)
     director = db.Column(db.String(30), nullable=False)
@@ -26,7 +26,7 @@ class Accounts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
-    creation_date = db.Column(db.String, nullable=False, default=str(datetime.utcnow()))
+    creation_date = db.Column(db.String, nullable=False, default=str(datetime.now()))
 
     def __str__(self):
         return f'Username: {self.username}; Password: {self.password}; Creation date: {self.creation_date}'
@@ -52,10 +52,10 @@ def login():
 
 @app.route('/user')
 def user():
-    if 'user' in session:
-        subjects = ['Python', 'Calculus', 'DB']
-        return render_template('user.html', subjects=subjects)
-    return redirect(url_for('login'))
+    movies=Movies.query.filter_by(account_name=session['user']).all()
+    return render_template('user.html', movies=movies)
+
+
 
 @app.route('/<name>/<age>')
 def userage(name, age):
@@ -64,16 +64,18 @@ def userage(name, age):
 @app.route('/logout')
 def logout():
     session.pop('user', None)
-    return 'You are logged out.'
+    return redirect(url_for('login'))
 
-@app.route('/books', methods=['GET', 'POST'])
-def books():
-    if request.method == 'POST':
+
+
+@app.route('/movies', methods=['GET', 'POST'])
+def movies():
+    if request.method=='POST':
         title = request.form['title']
         director = request.form['director']
         releasedate = request.form['releasedate']
         rating = request.form['rating']
-        movie1 = Movies(movie_title=title, director=director, release_date=releasedate, rating=rating)
+        movie1 = Movies(movie_title = title, director = director, release_date = releasedate, rating = rating, account_name=session['user'])
         db.session.add(movie1)
         db.session.commit()
         return 'Movie successfully added.'
@@ -83,7 +85,14 @@ def books():
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     if request.method == 'POST':
-        return sign_up()
+        username = request.form['username']
+        password = request.form['password']
+        if Accounts.query.filter_by(username=username).first():
+            return 'Username already exists'
+        new_user = Accounts(username=username, password=password, creation_date=str(datetime.now()))
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect(url_for('login'))
     return render_template('register.html')
 
 def sign_up():
