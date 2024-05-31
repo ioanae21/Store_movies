@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Hello {{session['user']}}! The recommended movies will be displayed here.</h2>
+    <h2> You can either search a movie by it's name, or filter the movies.</h2>
+    <form method="post" style="width:50%; margin-left: 10px">
+        <div class="form-group">
+          <input type="text" name="moviename" class="form-control" placeholder="Type a movie...">
+        </div>
+        <div class="row justify-content-center">
+      <button type="submit" class="btn btn-primary">Search for a movie</button>
+
+      </form>
+    <div class="grid" >
+
+        {% for movie in recommendations %}
+        <div class="movie-instance" >
+            <p> Title : {{movie[0]}}  <br> Rating : {{movie[1]}} <br> Release Date : {{movie[2]}}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
+
+
