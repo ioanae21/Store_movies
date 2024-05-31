@@ -1,12 +1,14 @@
 from flask import Flask, redirect, url_for, render_template, request, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from movie_api import MovieFinder
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'register'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///movies.sqlite'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+api = MovieFinder()
 
 class Movies(db.Model):
     __tablename__ = 'movies'
@@ -93,6 +95,14 @@ def register():
         db.session.commit()
         return redirect(url_for('login'))
     return render_template('register.html')
+
+@app.route('/recommendations', methods = ['GET', 'POST'])
+def recommendation_page():
+    if request.method == 'POST':
+        movie_name = request.form['moviename']
+        data = api.search_func(movie_name)
+        return render_template('add_movies.html',  recommendations = api.parse_moviedata(data))
+    return render_template('add_movies.html',  recommendations = [])
 
 if __name__ == "__main__":
     app.run(debug=True)
