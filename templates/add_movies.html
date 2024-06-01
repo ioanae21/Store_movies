@@ -8,8 +8,28 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     {% endfor %}
-
-      <div class="grid" >
+<h2>hello {{session['user']}} we will show you the most recomended movies</h2>
+    <h2>you can either search a movie by it's name, or filter the movies</h2>
+    <form method="post" style="width:50%; margin-left: 10px" >
+      <div class="form-group">
+      <input type="text" name="moviename" class="form-control" placeholder="Type a movie..."><br>
+      <br>
+      <div class="checkbox-data">
+        Filter by Genre:   <input type="checkbox" name="filter-by-genre" value="Action">Action
+        <input type="checkbox" name="filter-by-genre" value="Romance">Romance
+        <input type="checkbox" name="filter-by-genre" value="Horror">Horror
+        <input type="checkbox" name="filter-by-genre" value="Thriller">Thriller
+        <input type="checkbox" name="filter-by-genre" value="Comedy">Comedy<br>
+        filter by release date:<input type="text" name="filter-by-release" placeholder="Input a date..."><br>
+        filter by rating(not arage, input value)<input type="text" name="filter-by-rating" placeholder="Input rating...">
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <button type="submit" class="btn btn-primary">Search for a movie</button>
+      </div>
+      </form>
+      <br>
+      <br>      <div class="grid" >
 
         {% for movie in recommendations %}
         <div class="movie-instance" >
