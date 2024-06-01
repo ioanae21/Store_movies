@@ -118,7 +118,8 @@ def register(langg):
             if Accounts.query.filter_by(username=username).first():
                 flash('Username already exists')
                 return render_template('register.html')
-            new_user = Accounts(username=username, password=password, creation_date=str(datetime.now()))
+                 hashed_password = generate_password_hash(password, method='sha256')
+                new_user = Accounts(username=username, password=password, creation_date=str(datetime.now()))
             db.session.add(new_user)
             db.session.commit()
             flash('Registration successful. Please log in.')
