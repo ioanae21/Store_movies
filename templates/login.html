@@ -1,15 +1,39 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <!-- {{ super() }} -->
-    <h2>Login - ავტორიზაცია </h2>
+    
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
 
+    {% if lang == 'English' %}
+    <h2>Login</h2>
     <form method="post" style="width:50%; margin-left:20px;">
         <input type="text" name="username" class="form-control mb-3 mt-3" placeholder="username">
         <input type="password" name="password" class="form-control" placeholder="password">
         <div class="row justify-content-center">
+        <button type="submit" class="btn btn-success mt-3">Login</button>
+    </div>
+    </form>
+    {%endif%}
+
+    {% if lang == 'Georgian'%}
+    <h2>ავტორიზაცია</h2>
+    <form method="post" style="width:50%; margin-left:20px;">
+        <input type="text" name="username" class="form-control mb-3 mt-3" placeholder="სახელი">
+        <input type="password" name="password" class="form-control" placeholder="პაროლი">
+        <div class="row justify-content-center">
         <button type="submit" class="btn btn-success mt-3">ავტორიზაცია</button>
     </div>
+    </form>
+    {%endif%}
+
+    <form method="post" class="language-coll" style="width:50%; margin-left:20px;">
+        Please, select a language: <a name="language-selector" href="{{ url_for('login', langg = 'Georgian') }}"> ქართული
+        <a name="language-selector" href="{{ url_for('login', langg = 'English') }}"> English
     </form>
 
 {% endblock %}
