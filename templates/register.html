@@ -1,12 +1,39 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Register - რეგისტრაცია</h2>
-    <form method="post" style="width:50%; margin-left:20px;">
-        <input type="text" name="username" class="form-control mb-3 mt-3" placeholder="Username" required>
-        <input type="password" name="password" class="form-control" placeholder="Password" required>
-        <div class="row justify-content-center">
-        <button type="submit" class="btn btn-success mt-3">Register</button>
-    </div> 
+
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+
+    {% if lang == 'Georgian' %}
+        <h2>რეგისტრაციის გვერდი</h2>
+        <form method="post" style="width:50%; margin-left:20px;">
+            <input type="text" name="username" class="form-control mb-3 mt-3" placeholder="სახელი" required>
+            <input type="password" name="password" class="form-control" placeholder="პაროლი" required>
+            <div class="row justify-content-center">
+            <button type="submit" class="btn btn-success mt-3">რეგისტრაცია</button>
+        </div> 
+        </form>
+    {%endif%}
+
+    {% if lang == 'English' %}
+        <h2>Register Page</h2>
+        <form method="post" style="width:50%; margin-left:20px;">
+            <input type="text" name="username" class="form-control mb-3 mt-3" placeholder="Username" required>
+            <input type="password" name="password" class="form-control" placeholder="Password" required>
+            <div class="row justify-content-center">
+            <button type="submit" class="btn btn-success mt-3">Register</button>
+        </div> 
+        </form>
+    {%endif%}
+
+
+    <form method="post" class="language-coll" style="width:50%; margin-left:20px;">
+        Please, select a language: <a name="language-selector" href="{{ url_for('register', langg = 'Georgian') }}"> ქართული
+        <a name="language-selector" href="{{ url_for('register', langg = 'English') }}"> English
     </form>
 {% endblock %}
